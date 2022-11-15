@@ -1,8 +1,11 @@
 package com.play.scorecard;
 
+import static com.play.scorecard.R.raw.kb;
+
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -10,8 +13,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.play.scorecard.R;
 
 import java.util.Locale;
 
@@ -25,6 +26,7 @@ public class score extends Activity{
     private boolean mTimerRunning,raid_running;
 
     public static final long sec= 30000;
+    public MediaPlayer mediaPlayer = null;
 
     public TextView Time, Match_Time,raid_Time;
     public String time;
@@ -78,6 +80,7 @@ public class score extends Activity{
         bounus_blue = findViewById(R.id.bonus_blue);
         allout_blue = findViewById(R.id.allout_blue);
 
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 
@@ -125,12 +128,14 @@ public class score extends Activity{
         raid_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                stopPlaying();
+                mediaPlayer = MediaPlayer.create(score.this,R.raw.kb);
+                mediaPlayer.start();
                 if(raid_running)
                 {
                     pauseTimer();
                 }
-                else
-                {
+                else {
                     startTimer();
                 }
             }
@@ -144,6 +149,14 @@ public class score extends Activity{
         });
 
 
+    }
+    public void stopPlaying(){
+        if(mediaPlayer != null)
+        {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 
     private void resetTimer() {
@@ -394,5 +407,4 @@ public class score extends Activity{
         ScoreA.setText("" + count_red);
 
     }
-
 }
